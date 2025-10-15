@@ -33,6 +33,7 @@ def train_classical_ml():
 	}
 
 	best_name, best_model, best_score = None, None, -1.0
+	os.makedirs("models", exist_ok=True)
 	for name, model in models.items():
 		print(f"Training {name}...")
 		model.fit(X_train, y_train)
@@ -45,6 +46,9 @@ def train_classical_ml():
 		print(classification_report(y_test, y_pred, target_names=prep.classes))
 		print("Confusion matrix (Test):")
 		print(confusion_matrix(y_test, y_pred))
+
+		# Save each trained model for per-model inference later
+		joblib.dump(model, f"models/ml_model_{name}.joblib")
 
 	os.makedirs("models", exist_ok=True)
 	joblib.dump(best_model, f"models/best_ml_model_{best_name}.joblib")
